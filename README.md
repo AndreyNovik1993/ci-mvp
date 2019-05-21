@@ -7,6 +7,8 @@
 4. After complited docker-compose command wait several minutes until all docker enviroment start 
 5. Run commnad ./add_job.sh seed job will be create after 5s and after creating pipeline job will run once.
 
+P.S If you have problems with runing pipeline on stage (SonarQube), waiting more time and restart script ./add_job.sh gain. 
+
 If you want see resolts for sonarqube visit page http://localhost:9000, artifactory with build http://localhost:8081. 
 All workflow watched in http://localhost:8080/blue/organizations/jenkins/job_dsl%2Fpipeline/detail/pipeline/1/pipeline or http://localhost:8080/job/job_dsl/job/pipeline/
 
