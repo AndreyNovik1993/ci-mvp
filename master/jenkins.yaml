@@ -1,0 +1,52 @@
+jenkins:
+security:
+  apiToken:
+    creationOfLegacyTokenEnabled: false
+    tokenGenerationOnCreationEnabled: false
+    usageStatisticsEnabled: true
+  downloadSettings:
+    useBrowser: false
+  globalJobDslSecurityConfiguration:
+    useScriptSecurity: false
+  sSHD:
+    port: -1
+unclassified:
+  sonarGlobalConfiguration:
+    buildWrapperEnabled: true
+    installations:
+    - name: "sonarqube_scanner"
+      serverUrl: "http://192.168.56.101:9000"
+      triggers:
+        skipScmCause: false
+        skipUpstreamCause: false
+
+
+tool:
+  jdk:
+    installations:
+    - name: "JDK"
+  msBuildSQRunnerInstallation:
+    defaultProperties:
+    - installSource:
+        installers:
+        - "msBuildSonarQubeRunnerInstaller"
+    installations:
+    - name: "sonarqube_scanner_msbuild"
+      properties:
+      - installSource:
+          installers:
+          - msBuildSonarQubeRunnerInstaller:
+              id: "4.6.0.1930"
+  sonarRunnerInstallation:
+    defaultProperties:
+    - installSource:
+        installers:
+        - "sonarRunnerInstaller"
+    installations:
+    - name: "sonarqube_scanner"
+      properties:
+      - installSource:
+          installers:
+          - sonarRunnerInstaller:
+              id: "3.3.0.1492"
+
