@@ -9,5 +9,5 @@ if [ $? -eq 0 ] ;
     curl -X POST http://admin:admin@localhost:8080/job/seed/build
   fi
 else 
-   echo 'jon do not add jenkins' 
+   echo 'job do not add jenkins, starting jenkins conteiner' 
 fi
