@@ -23,7 +23,7 @@ pipeline {
             
             steps { 
                 withSonarQubeEnv('sonarqube_scanner') {
-                    sh "${scannerHome}/bin/sonar-scanner -X  -Dsonar.host.url=http://192.168.56.101:9000  -Dsonar.language=c++ -Dsonar.projectName=test -Dsonar.lang.patterns.c++=**/*.cpp,**/*.h -Dsonar.projectVersion=1.1 -Dsonar.projectKey=My_project -Dsonar.lang.patterns.c=**/*.c,**/*.h -Dsonar.sources=src -Dsonar.tests=. -Dsonar.test.inclusions=**/*Test*/** -Dsonar.exclusions=**/*Test*/**"
+                    sh "${scannerHome}/bin/sonar-scanner -X  -Dsonar.host.url=http://sonarqube:9000  -Dsonar.language=c++ -Dsonar.projectName=test -Dsonar.lang.patterns.c++=**/*.cpp,**/*.h -Dsonar.projectVersion=1.1 -Dsonar.projectKey=My_project -Dsonar.lang.patterns.c=**/*.c,**/*.h -Dsonar.sources=src -Dsonar.tests=. -Dsonar.test.inclusions=**/*Test*/** -Dsonar.exclusions=**/*Test*/**"
                 }
             }
         }
@@ -40,7 +40,7 @@ pipeline {
         }
         stage("Push Artifactory") {
             steps { 
-                sh 'curl -u admin:password -T build/GameMenu/GameMenu.o "http://192.168.56.101:8081/artifactory/example-repo-local/"'
+                sh 'curl -u admin:password -T build/GameMenu/GameMenu.o "http://artifactory:8081/artifactory/example-repo-local/"'
             }
         }
     }
