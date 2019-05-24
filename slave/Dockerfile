@@ -6,7 +6,7 @@ RUN echo "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stabl
 RUN apt-get update && apt-get install -y docker-ce --allow-unauthenticated
  
 RUN apt-get update && apt-get install -y  openjdk-8-jre curl python python-pip git  
-RUN  apt-get install -y  g++ build-essential
+RUN  apt-get install -y  g++ build-essential cppcheck
 RUN easy_install jenkins-webapi 
  
 # Get docker-compose in the agent container
