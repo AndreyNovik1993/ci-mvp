@@ -9,7 +9,7 @@ pipeline {
         stage('Build') { 
             steps { 
                 sh 'make'
-                sh 'cppcheck --xml --xml-version=2 src 2> cppcheck.xml'
+                sh 'cppcheck --enable=information --xml --xml-version=2 src 2> cppcheck.xml'
             }
         }
         stage("Uniti test") { 
