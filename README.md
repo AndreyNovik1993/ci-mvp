@@ -83,7 +83,7 @@ All documentation for your project has to be put into README.md file and written
 5. Run commnad ./add_job.sh seed job will be create after 5s and after creating pipeline job will run once.
 
 P.S If you have problems with runing pipeline on stage (SonarQube), waiting more time and restart script ./add_job.sh gain. 
-Warning!!! Run docker containers with tack on host with  memory more 4Gb.  
+Warning!!! Run docker containers with task on host with  memory more 4Gb.  
 
 If you want see resolts for sonarqube visit page http://localhost:9000, artifactory with build http://localhost:8081. 
 All workflow watched in http://localhost:8080/blue/organizations/jenkins/job_dsl%2Fpipeline/detail/pipeline/1/pipeline or http://localhost:8080/job/job_dsl/job/pipeline/
