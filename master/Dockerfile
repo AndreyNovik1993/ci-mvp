@@ -2,7 +2,7 @@
 FROM jenkins/jenkins
  
 # Installing the plugins we need using the in-built install-plugins.sh script
-RUN /usr/local/bin/install-plugins.sh git  job-dsl sonar-quality-gates configuration-as-code  docker-plugin configuration-as-code-support artifactory build-pipeline cmakebuilder authorize-project xunit cppcheck locale sonar matrix-auth workflow-aggregator docker-workflow blueocean credentials-binding 
+RUN /usr/local/bin/install-plugins.sh git  job-dsl sonar-quality-gates configuration-as-code  docker-plugin configuration-as-code-support artifactory build-pipeline cmakebuilder authorize-project xunit cppcheck locale sonar matrix-auth workflow-aggregator docker-workflow credentials-binding 
 
  
 # Setting up environment variables for Jenkins admin user
