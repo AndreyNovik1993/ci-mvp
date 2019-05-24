@@ -9,11 +9,12 @@ pipeline {
         stage('Build') { 
             steps { 
                 sh 'make'
+                sh 'cppcheck --enable=all --inconclusive --xml --xml-version=2 src 2> cppcheck.xml'
             }
         }
         stage("Uniti test") { 
             steps { 
-                sh 'ls -l build/GameMenu/GameMenu.o'
+                publishCppcheck pattern:'cppcheck.xml'
             }
         }
         stage("SonarQube analysis") {
