@@ -39,10 +39,11 @@ pipeline {
                 }
             }
         }
-        stage("Push Artifactory") {
-            steps { 
+	stage("Push Artifactory") {
+            steps {
                 sh 'curl -u admin:password -T build/GameMenu/GameMenu.o "http://artifactory:8081/artifactory/example-repo-local/"'
             }
         }
     }
 }
+
