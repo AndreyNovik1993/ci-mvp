@@ -1,34 +1,16 @@
-FROM ubuntu:16.04
- 
-# Install Docker CLI in the agent
-RUN apt-get update && apt-get install -y apt-transport-https ca-certificates
-RUN echo "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable" > /etc/apt/sources.list.d/docker.list
-RUN apt-get update && apt-get install -y docker-ce --allow-unauthenticated
- 
-RUN apt-get update && apt-get install -y  openjdk-8-jre curl python python-pip git  
-RUN  apt-get install -y  g++ build-essential cppcheck
-RUN easy_install jenkins-webapi 
- 
-# Get docker-compose in the agent container
-RUN curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
-RUN mkdir -p /home/jenkins
-RUN mkdir -p /var/lib/jenkins
- 
-# Start-up script to attach the slave to the master
-ADD slave.py /var/lib/jenkins/slave.py
- 
-WORKDIR /home/jenkins
- 
-ENV JENKINS_URL "http://jenkins"
-ENV JENKINS_SLAVE_ADDRESS ""
-ENV JENKINS_USER "admin"
-ENV JENKINS_PASS "admin"
-ENV SLAVE_NAME ""
-ENV SLAVE_SECRET ""
-ENV SLAVE_EXECUTORS "1"
-ENV SLAVE_LABELS "docker"
-ENV SLAVE_WORING_DIR ""
-ENV CLEAN_WORKING_DIR "true"
- 
-CMD [ "python", "-u", "/var/lib/jenkins/slave.py" ]
+FROM jenkinsci/ssh-slave
+COPY ./files/.ssh /root/.ssh
+RUN chmod -R 700 /root && sed -i -e 's/PermitRootLogin no/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN apt-get update -y && apt-get install -y \
+                                        apt-utils
+RUN apt-get update -y && apt-get install -y \
+                                        cmake \
+  					g++ \
+					build-essential \
+					cppcheck \
+                                        autoconf \
+                                        libtool \
+                                        stunnel4 \
+                                        nghttp2
+
 
