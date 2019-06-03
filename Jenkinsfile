@@ -39,10 +39,17 @@ pipeline {
                 }
             }
         }
-        stage("Push Artifactory") {
-            steps { 
-                sh 'curl -u admin:password -T build/GameMenu/GameMenu.o "http://artifactory:8081/artifactory/example-repo-local/"'
-            }
-        }
+        stage('Atrifactory') {
+            def server = Artifactory.server 'artifactory'
+	        def uploadSpec = """{
+                 "files": [
+                     {
+                        "pattern": "*.txt",
+                        "target": "example-repo-local/files/"
+                    }
+                     ]
+                 }"""
+	        server.upload spec: uploadSpec, failNoOp: true
+           }  
     }
 }
