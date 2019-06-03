@@ -3,7 +3,6 @@ pipeline {
     stages { 
         stage("SCM") {
             steps { 
-                #git 'https://github.com/ParadoxZero/GameMenu-cpp.git'
                 git 'https://github.com/curl/curl.git'
             }
         }
