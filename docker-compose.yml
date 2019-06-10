@@ -5,21 +5,15 @@ services:
         ports:
             - '8080:8080'
             - '50000:50000'
-        environment:
-            - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+#        environment:
+#           - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
 
-     agent:
-        build: 
-          context: . 
-          dockerfile: slave/Dockerfile
-        hostname: agent 
+     agent_swarm: 
+        build:
+          context: .
+          dockerfile: slave/dockerfile_slaveswarm
         depends_on:
-           - jenkins
-
-      agent_swarm: 
-         build:
-           context: .
-           dockerfile: slave/dockerfile_slaveswarm
+          - jenkins
 
      sonarqube:
         build: sonarqube
@@ -38,8 +32,8 @@ services:
         depends_on:
             - jenkins
 #    Add extra Java options by uncommenting the following lines
-    environment:
-     - EXTRA_JAVA_OPTIONS=-Xmx2g
+        environment:
+         - EXTRA_JAVA_OPTIONS=-Xmx3g
         restart: always
         ulimits:
           nproc: 65535

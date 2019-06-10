@@ -1,0 +1,15 @@
+FROM jenkinsci/ssh-slave
+ADD https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/3.16/swarm-client-3.16.jar /home/jenkins/swarm-client.jar
+RUN apt-get update -y && apt-get install -y \
+					apt-utils
+RUN apt-get update -y && apt-get install -y \
+                                        cmake \
+                                        g++ \
+                                        build-essential \
+                                        cppcheck \
+                                        autoconf \
+                                        libtool \
+                                        stunnel4 \
+                                        nghttp2
+
+ENTRYPOINT ["/usr/bin/java", "-jar", "/home/jenkins/swarm-client.jar", "-name", "agentswarm", "-username", "admin", "-password", "admin"]
