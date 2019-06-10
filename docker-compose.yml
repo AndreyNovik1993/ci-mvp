@@ -5,16 +5,8 @@ services:
         ports:
             - '8080:8080'
             - '50000:50000'
-
-     #slave:
-        #build: slave
-        #restart: always
-        #environment:
-        #    - 'JENKINS_URL=http://jenkins:8080'
-        #volumes:
-        #    - /var/run/docker.sock:/var/run/docker.sock
-        #depends_on:
-        #    - jenkins
+        environment:
+            - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
 
      agent:
         build: 
@@ -23,6 +15,11 @@ services:
         hostname: agent 
         depends_on:
            - jenkins
+
+      agent_swarm: 
+         build:
+           context: .
+           dockerfile: slave/dockerfile_slaveswarm
 
      sonarqube:
         build: sonarqube
@@ -36,13 +33,13 @@ services:
         image: docker.bintray.io/jfrog/artifactory-oss:latest
         ports:
            - '8081:8081'
-#        volumes:
-#        - /data/artifactory:/var/opt/jfrog/artifactory
+        volumes:
+        - /opt/artifactory:/var/opt/jfrog/artifactory
         depends_on:
             - jenkins
 #    Add extra Java options by uncommenting the following lines
-#    environment:
-#     - EXTRA_JAVA_OPTIONS=-Xmx4g
+    environment:
+     - EXTRA_JAVA_OPTIONS=-Xmx2g
         restart: always
         ulimits:
           nproc: 65535
