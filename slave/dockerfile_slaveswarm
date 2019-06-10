@@ -12,4 +12,4 @@ RUN apt-get update -y && apt-get install -y \
                                         stunnel4 \
                                         nghttp2
 
-ENTRYPOINT ["/usr/bin/java", "-jar", "/home/jenkins/swarm-client.jar", "-name", "agentswarm", "-username", "admin", "-password", "admin"]
+ENTRYPOINT ["/usr/bin/java", "-jar", "/home/jenkins/swarm-client.jar", "-name", "agentswarm", "-username", "admin", "-password", "admin","-executors","1"]

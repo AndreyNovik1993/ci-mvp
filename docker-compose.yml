@@ -1,4 +1,4 @@
-version: '3.1'
+version: "3.7"
 services:
      jenkins:
         build: master
@@ -8,12 +8,14 @@ services:
 #        environment:
 #           - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
 
+
      agent_swarm: 
         build:
           context: .
           dockerfile: slave/dockerfile_slaveswarm
         depends_on:
-          - jenkins
+           - jenkins
+
 
      sonarqube:
         build: sonarqube
