@@ -10,7 +10,7 @@ pipeline {
                       ]
             }
         }
-		stage("SonarQube analysis") {
+	stage("SonarQube analysis") {
             environment {
             scannerHome = tool 'sonarqube_scanner'
             }
@@ -65,7 +65,7 @@ pipeline {
                     }"""
                     server.upload spec: uploadSpec, failNoOp: true
                 }
-	        }
+	    }
         }
     }
 }
