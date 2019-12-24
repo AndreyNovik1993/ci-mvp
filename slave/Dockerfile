@@ -1,6 +1,7 @@
 FROM jenkinsci/ssh-slave
-COPY ./files/.ssh /root/.ssh
-RUN chmod -R 700 /root && sed -i -e 's/PermitRootLogin no/PermitRootLogin yes/' /etc/ssh/sshd_config
+ADD https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/3.16/swarm-client-3.16.jar /opt/swarm-client.jar
+USER root
+RUN chmod 755 /opt/swarm-client.jar
 RUN apt-get update -y && apt-get install -y \
                                         apt-utils
 RUN apt-get update -y && apt-get install -y \
@@ -11,6 +12,8 @@ RUN apt-get update -y && apt-get install -y \
                                         autoconf \
                                         libtool \
                                         stunnel4 \
-                                        nghttp2
+                                        nghttp2 \
+                                        zip
+
 
 

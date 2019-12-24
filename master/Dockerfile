@@ -1,8 +1,11 @@
 #Starting off with the Jenkins base Image
+#FROM  jenkins/jenkins:2.187
 FROM jenkins/jenkins
- 
+
 # Installing the plugins we need using the in-built install-plugins.sh script
-RUN /usr/local/bin/install-plugins.sh git  job-dsl sonar-quality-gates configuration-as-code  docker-plugin configuration-as-code-support artifactory build-pipeline cmakebuilder authorize-project xunit cppcheck locale sonar matrix-auth workflow-aggregator docker-workflow credentials-binding swarm 
+RUN /usr/local/bin/install-plugins.sh git  job-dsl sonar-quality-gates configuration-as-code  docker-plugin configuration-as-code-support \
+artifactory build-pipeline authorize-project xunit cppcheck locale sonar matrix-auth credentials-binding swarm \
+workflow-aggregator docker-workflow cmakebuilder
 
  
 # Setting up environment variables for Jenkins admin user
@@ -15,7 +18,7 @@ ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
 # Start-up scripts to set number of executors and creating the admin user
 #COPY executors.groovy /usr/share/jenkins/ref/init.groovy.d/
 #COPY default-user.groovy /usr/share/jenkins/ref/init.groovy.d/
-copy *.groovy /usr/share/jenkins/ref/init.groovy.d/ 
+copy ./groovy/*.groovy /usr/share/jenkins/ref/init.groovy.d/ 
 copy jenkins.yaml /var/jenkins_home/
 
 

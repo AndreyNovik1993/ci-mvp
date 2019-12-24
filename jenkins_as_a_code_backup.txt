@@ -1,0 +1,498 @@
+jenkins:
+  proxy:
+    name: "192.168.38.10"
+    port: "3128"
+    noProxyHost: "github.fidor.de, .fidor.intern"
+    testUrl: "http://google.com"
+  systemMessage: "VanLanshot Jenkins PROD Environment"
+  slaveAgentPort: 50000
+  agentProtocols:
+    - "JNLP4-connect"
+  crumbIssuer:
+    standard:
+      excludeClientIPFromCrumb: true
+  disableRememberMe: true
+  scmCheckoutRetryCount: 0
+  mode: EXCLUSIVE
+  labelString: "master"
+  numExecutors: 2
+  primaryView:
+    list:
+      name: "deploy"
+  views:
+    - all:
+        name: "all"
+    - list:
+        name: "deploy"
+        includeRegex: ".*Deploy.*"
+  securityRealm:
+    ldap:
+      configurations:
+        - server: "ldap://p-de-ifs-ipa01.fidor.intern:389"
+          rootDN: "dc=fidor,dc=intern"
+          inhibitInferRootDN: false
+          userSearchBase: "cn=users,cn=accounts"
+          groupSearchBase: "cn=groups,cn=compat"
+          groupSearchFilter: "(& (cn={0}) (| (dn=cn=prod-jenkins-admin-vl,cn=groups,cn=compat,dc=fidor,dc=intern) (cn=prod-jenkins-user-vl,cn=groups,cn=compat,dc=fidor,dc=intern) ))"
+          inhibitInferRootDN: false
+          managerDN: "uid=ldap-vl-jenkins,cn=users,cn=accounts,dc=fidor,dc=intern"
+          managerPasswordSecret: "{{ ldap_manager_password }}"
+      cache:
+        size: 100
+        ttl: 10
+      userIdStrategy: CaseSensitive
+      groupIdStrategy: CaseSensitive
+  authorizationStrategy:
+    roleBased:
+      roles:
+        global:
+          - name: "admin"
+            description: "Jenkins administrators"
+            permissions:
+              - "Overall/Administer"
+              - "Overall/Read"
+              - "Credentials/Create"
+              - "Credentials/Delete"
+              - "Credentials/ManageDomains"
+              - "Credentials/Update"
+              - "Credentials/View"
+              - "Agent/Build"
+              - "Agent/Configure"
+              - "Agent/Connect"
+              - "Agent/Create"
+              - "Agent/Delete"
+              - "Agent/Disconnect"
+              - "Agent/Provision"
+              - "Job/Build"
+              - "Job/Cancel"
+              - "Job/Configure"
+              - "Job/Create"
+              - "Job/Delete"
+              - "Job/Discover"
+              - "Job/Move"
+              - "Job/Read"
+              - "Job/ViewStatus"
+              - "Job/Workspace"
+              - "Run/Delete"
+              - "Run/Replay"
+              - "Run/Update"
+              - "View/Configure"
+              - "View/Create"
+              - "View/Delete"
+              - "View/Read"
+              - "SCM/Tag"
+              - "Metrics/HealthCheck"
+              - "Metrics/ThreadDump"
+              - "Metrics/View"
+            assignments:
+              - "admin"
+              - "prod-jenkins-admin-vl"
+          - name: "developer"
+            description: "Dev users"
+            permissions:
+              - "Overall/Read"
+              - "Credentials/View"
+              - "Job/Build"
+              - "Job/Cancel"
+              - "Job/Discover"
+              - "Job/Read"
+              - "Job/ViewStatus"
+              - "Job/Workspace"
+              - "Run/Delete"
+              - "Run/Replay"
+              - "Run/Update"
+              - "View/Read"
+              - "SCM/Tag"
+              - "Metrics/HealthCheck"
+              - "Metrics/View"
+            assignments:
+              - "prod-jenkins-user-vl"
+          - name: "read-only"
+            description: "read-only users"
+            permissions:
+              - "Overall/Read"
+              - "Credentials/View"
+              - "Job/Discover"
+              - "Job/Read"
+              - "Job/ViewStatus"
+              - "Job/Workspace"
+              - "Run/Replay"
+              - "View/Read"
+              - "Metrics/View"
+            assignments:
+              - "prod-jenkins-read-only-vl"
+          - name: "agent"
+            description: "Slave users"
+            permissions:
+              - "Overall/Read"
+              - "Agent/Connect"
+              - "Agent/Create"
+              - "Agent/Delete"
+              - "Agent/Provision"
+              - "Agent/Disconnect"
+              - "Agent/Build"
+            assignments:
+              - "prod-jenkins-agents-vl"
+  nodes:
+    - permanent:
+        labelString: "j-worker01 fidor docker"
+        mode: NORMAL
+        name: "j-worker01"
+        numExecutors: 8
+        remoteFS: "/var/lib/jenkins"
+        launcher:
+          SSHLauncher:
+            host: "p-vl-jnk-worker01.fidor.intern"
+            port: 22
+            credentialsId: agent_private_key
+            launchTimeoutSeconds: 120
+            maxNumRetries: 10
+            retryWaitTime: 15
+            sshHostKeyVerificationStrategy:
+              manuallyTrustedKeyVerificationStrategy:
+                requireInitialManualTrust: false
+    - permanent:
+        labelString: "j-worker02 fidor docker"
+        mode: NORMAL
+        name: "j-worker02"
+        numExecutors: 8
+        remoteFS: "/var/lib/jenkins"
+        launcher:
+          SSHLauncher:
+            host: "p-vl-jnk-worker02.fidor.intern"
+            port: 22
+            credentialsId: agent_private_key
+            launchTimeoutSeconds: 120
+            maxNumRetries: 10
+            retryWaitTime: 15
+            sshHostKeyVerificationStrategy:
+              manuallyTrustedKeyVerificationStrategy:
+                requireInitialManualTrust: false
+credentials:
+    system:
+      domainCredentials:
+        - credentials:
+            - basicSSHUserPrivateKey:
+                scope: SYSTEM
+                id: agent_private_key
+                scope: SYSTEM
+                username: "jenkins"
+                passphrase:  ""
+                description: "ssh private key used to connect ssh slaves"
+                privateKeySource:
+                  directEntry:
+                    privateKey: |
+                      -----BEGIN RSA PRIVATE KEY-----
+                      MIIEogIBAAKCAQEAz7jNKo900tfQudUeQMZb0XDjD4qKUnWkb1qGA1nwyju1POmn
+                      z/rllA7JW5rDxISJ2G0vqgI15mjyp00XcF8KeyBOVbRDXJcmIKoNtqpkWnERK4+D
+                      3qeGeZ0WKlQa3wp/1YtrflX41DhZzudSaKIDbuqQ/L/XpD7H0wIuu7VfiFrhoOqa
+                      R1UVnCtYuWtktFrXO4F/vdJ0V4Vs19Ga4ZpLfCwgV5JeqyIfvFiQhc8ZkOdJSR3P
+                      ApdeynEkAriazIeeHdJ0sH+gEm7i17MFHfMWuRfgC7p/JJdNTp0xKNXhYOdDIjhJ
+                      2Z48GXUclu62MMWWIiv+PYkiw3xn6LYO4UjBCwIBIwKCAQEAycl22OMhB1VOa2FQ
+                      lrIQDUkXFmlTK4g5VjquEeJXn+I7B/jsKR+dML3oLRoAALtEFBJLjzVY7nST8vpu
+                      imr0PRgRlRWDRACLcDAqlDB+vkHzbCUDwlmYk2Vl/TvCVQLilO3WIvRuD/w5/DEr
+                      e5YR9rf6jyDC2hEZ4uwtZeNkHg1kRC5XsWGbAIEfKyg4GPZ2+Kf4opRRgJvVMNAO
+                      eUJEG5wL5/ZAPthiGoRV7y8wvzUSopK9jT2zNofMPqnt2bJ05yp8S1+T+6J1AUQg
+                      0+ih73eTecp0jVEmYtSmo+bBTNiBrnxVXAx4bNU9TZNTwWQUZi8kvDjZBAyji26W
+                      mK2QawKBgQDpdBNqtifG9tHXiBArnShjkukrsY6lw4qRMXbD3/etMLzr1efM+9h/
+                      Ixtx8B4ZEzd3UVsanhLuAEqYigyoqGy0bDWi/YClEt4Xkolx5jx1BprBfOvlxqa7
+                      hk7970yZR/pwdxo1q5Osk83qq2Z6freOmkS0K+WtAaV8dSF2IP7z0wKBgQDjyIlc
+                      0wyYfy7wKpO0DI8XTkXFCo0CNTxTAypPou12TSFkfEsxbpgObuIRasQwMVOKFCul
+                      +MTtAvUbGgwT4h9xWjxgztFMEx5Dw9vp5Rn6/75C+tiKzHdivOvD6yrMZ+/Us7w0
+                      x8F894BjwVJ0iRfyiCAryFnhpxU0CbHQjIgS6QKBgFa2FdcttwDCE21Py33p6m4g
+                      n7/Fm2IkDuV4xbZ3wmTmN4rLyyBASRlHjdnc1/qvXb6aj42LK5o6n106lvzQ1+s+
+                      Ioz/EoZ0uOQvHRutSafPQMuGK7u+0DcGABUs/zGeZFWolLTZVBuHWxymEB7em/Mj
+                      W1jdGss7IDWKl2ZkBuzZAoGBAK+39O/WAmcDBvPJEttaJT3dS8PjkVl5hk6qq5yF
+                      AFPyW5apBs5coS+0n8RLDF+xBe4s0Tbkeqg1e0DK81/LsdsZuYyCSa+2+hcEzjgX
+                      IquvWEJMeyk+pT2KbLu1aiin84bTy7OwCkp1yXGGgW/XeN+q1v00KBR5lAOSczp7
+                      CeKzAoGAUf6fTqXlKzGyufx3dWLufdULmso7KGhXXPl48Sl5JtXThm+xhW+6CFEO
+                      bQEhF7/uno0M6tCaIpvxwgfmG0y7VkVCqGHlHfiQhLEcmeLfNazOr8F2Acq9Fchd
+                      1pOB0UVpadMqFS3MSzBFDGbLVFgds/ERuMt08y+TzGR2x4PTBCY=
+                      -----END RSA PRIVATE KEY-----
+            - basicSSHUserPrivateKey:
+                id: ideal_private_key
+                scope: GLOBAL
+                username: "iDEAL"
+                passphrase:  ""
+                description: "This credentials for iDEAL project github.fidor.de "
+                privateKeySource:
+                  directEntry:
+                    privateKey: |
+                      -----BEGIN RSA PRIVATE KEY-----
+                      MIIEpAIBAAKCAQEAqQ9WIO35CJyfn4P9uwcglSfWwMin0P00rJSiWbLz+oPQHCrV
+                      vu51KjAQD2PKPTq/2/08aSPHjwC3w7yPcZpSreQvBPDM0fBF+m3d+GNQDq4RHzGV
+                      YMrHGjn6/7PLtI1B9+ne56WYXDl+uWuU6oSThtkMXJjEiboyi5MS1a+1hMUmUphK
+                      R+xlmDD++kfc/HEW85bLkvUoKBqeWirb781Le1jt1OqdUepF+s4VoOmKHC8W1E/h
+                      rue7aoIG439gqPblHj638R5jC3DxvhYSVBUVvcz9AF8XSN7nElitjthTZ2+ZDRCE
+                      uU5D+DIw8glvOgB3WNqGJHElov0jFKRJDNHLfwIDAQABAoIBAB3EyZG61aMikSjx
+                      gPgx5RbekP4ZVxOBwoixE3VgAX4XP8n18PVR3+ex1uIe3Dmz4pzGFqEc38LaiYE5
+                      7rg+SFi+WVkxXZ+KA4h5WCCovCwZkoI/pOIKUszXcM8dxbzhMsCIuetoSU/T//B+
+                      dRZmieOwzHBxpgnqc4QIPcTKz9e05fw4lmDvRYb/joUATa/8BSoL8lrepduSwVhY
+                      JXQiT9jyo7Ute0An5YqTTdLw05yrNW+lnLpC4A5kP/pgnUsfhQOG+jwcsxbeMiBs
+                      o7kaedGK9ITYwd+Er+46Jj7/EhyequyUfrM/vyHUPntTmfZ57xSqoEn/TldDGOs7
+                      mUjIYGECgYEA3zkBR1PXSu5ckOzG5mbw38KsZzM/W6NUAqhkIJU63JQKgzIXSuVd
+                      fpF9xvjCyjYNdb4R6ZZmrWXSfYdYwYAhdOdc2DSi9kP+o2E7/BIJbp9lELdNmM9+
+                      lbAMeV0ZG6aKnodQvvgh6Llh9NZu69IcWJGHGc13DnDcJMGjRVq6CM0CgYEAweJW
+                      +d5k/+djQmIBZED8xhjYA9tLp+kfDnLUiNuCSKzdFm5EoHlvdXRMTinSqT0HZ+DY
+                      RUw+zqIu6D9583ai2z/u97cBE8mi6SWY88pLH0PscnT2uXoHga4H9M/uk937cEpP
+                      Rc38TE2OpyGuGFh0GjIJOD0TSKcjYqGzRXCR1XsCgYEAlnnkHcQsBswmRGAJOPo9
+                      +GlQNQV7+Xdhw6TmUnymwFlfuM9Emm2CGDdV1ZKOJShI7I1jn9aOgud3/L0HnPGW
+                      HCt3EBxzmpV9i3+ZozQ5fYQf6iPXQGLnz1ptHkcfDN+45GMNkJ7OpQaLPTRsc7Yg
+                      +6emrkMuteJo1LJgMPmXHSUCgYEAos2jSSe02al7kMdo8b0cRF+iLALd0X4QZPqJ
+                      eu4PxWTaNTaci7/Mluz0EgJOcWvcpx6HnBD9AFfxWXXLumNZNw/FYt6ZmfsLwAih
+                      Gb05PWS0zBto/a/5U6xF5A0iAao5sz3CuRPRkmThr3e5j5nezAxN75phcfVe4jhz
+                      p5Bx9LcCgYBj3M401TsYxAv9DqoiZcyx9gognIziBxtfxTHIkAcrRCeoh+mRI2/z
+                      T+kRSVFww4BsKLDqJef7qdmq5PdB4Avpgm9aUoW+Sl5K3zA+epA0OrL9BuXmCkvI
+                      F2NbLxrbLnJJwvB6Ys21xrHJaklyYMM3Y52pmuGjuMZE5RtTuUVfPA==
+                      -----END RSA PRIVATE KEY-----
+            - usernamePassword:
+                scope: GLOBAL
+                id: idealArtifactory
+                username: upload
+                password: {{ ideal_artifactory_passwd }}
+                description: "credentials to access p-vl-idl-archiva02.fidor.intern:8080/repository/de.fidor.ideal"
+            - usernamePassword:
+                scope: GLOBAL
+                id: ideal_deployer
+                username: deployer
+                password: {{ ideal_deployer_passwd }}
+                description: "user for deployment iDEAL"
+        - domain:
+            name: "chat.fidor.de"
+            description: "chat.fidor.de domain"
+          credentials:
+            - string:
+                description: "VLE2Enotifications"
+                id: "VLE2Enotifications"
+                scope: GLOBAL
+                secret: "{{ hipchat_e2e_password }}"
+            - string:
+                description: "HipChat_VLDebitCards"
+                id: "VLDebitCards"
+                scope: GLOBAL
+                secret: "{{ hipchat_debit_card_password }}"
+            - string:
+                description: "VLhealthcheck"
+                id: "VLhealthcheck"
+                scope: GLOBAL
+                secret: "{{ hipchat_health_check_password }}"
+            - string:
+                description: "vl_smoke"
+                id: "vl_smoke"
+                scope: GLOBAL
+                secret: "{{ hipchat_smoke_password }}"
+            - string:
+                description: "vl_smoke_reports"
+                id: "vl_smoke_reports"
+                scope: GLOBAL
+                secret: "{{ hipchat_smoke_report_passwod }}"
+            - string:
+                description: "HipChat-Vl-build"
+                id: "HipChat-Vl-build"
+                scope: GLOBAL
+                secret: "{{ hipchat_build_password }}"
+        - domain:
+            name: "github.fidor.de"
+            description: "github.fidor.de domain"
+            specifications:
+            - hostnameSpecification:
+                includes: "github.fidor.de"
+            - pathSpecification:
+                includes: "/api/v3/"
+          credentials:
+            - string:
+                id: "github_token"
+                scope: GLOBAL
+                secret: "{{ github_user_token }}"
+        - domain:
+            name: "fidorsolutions.slack.com"
+            description: "fidorsolutions.slack.com domain"
+          credentials:
+            - string:
+                description: "slack token for vl-build-deploy channel"
+                id: "vl-build-deploy"
+                scope: GLOBAL
+                secret: "{{ slack_vl_build_deploy }}"
+            - string:
+                description: "slack token for vl-deploy-stage channel"
+                id: "vl-deploy-stage"
+                scope: GLOBAL
+                secret: "{{ slack_vl_deploy_stage }}"
+            - string:
+                description: "slack token for vl-deploy-uat channel"
+                id: "vl-deploy-uat"
+                scope: GLOBAL
+                secret: "{{ slack_vl_deploy_uat }}"
+            - string:
+                description: "slack token for vl-deploy-uat_mig channel"
+                id: "vl-deploy-uat_mig"
+                scope: GLOBAL
+                secret: "{{ slack_vl_deploy_uat_mig }}"
+            - string:
+                description: "slack token for vl-deploy-prod channel"
+                id: "vl-deploy-prod"
+                scope: GLOBAL
+                secret: "{{ slack_vl_deploy_prod }}"
+            - string:
+                description: "slack token for vl-smoke-tests channel"
+                id: "vl-smoke-tests"
+                scope: GLOBAL
+                secret: "{{ slack_vl_smoke_tests }}"
+            - string:
+                description: "slack token for vl_health_checks channel"
+                id: "vl_health_checks"
+                scope: GLOBAL
+                secret: "{{ slack_vl_health_checks }}"
+tool:
+  git:
+    installations:
+      - name: Default
+        home: "git"
+
+unclassified:
+  location:
+    url: "https://p-vl-jenkins.fidor.intern"
+    adminAddress: support@fidor.com
+  hipchatnotifier:
+    server: "chat.fidor.de"
+    v2Enabled: true
+  githubpluginconfig:
+    configs:
+      - name: "fidor"
+        apiUrl: "https://github.fidor.de/api/v3/"
+        credentialsId: "github_token"
+        manageHooks: true
+  extendedemailpublisher:
+    smtpServer: "mx03.fidor.intern"
+  collapsingsectionnote:
+    sections:
+    - sectionDisplayName: "Git Checkout"
+      sectionEndPattern: "\\>\\ git\\ rev-list\\ [a-z0-9]+\\ #\\ timeout=10"
+      sectionStartPattern: "Cloning the remote Git repository"
+    - sectionDisplayName: "Ruby / Bundler"
+      sectionEndPattern: "Bundle complete! .+"
+      sectionStartPattern: "Using /usr/local/rvm/gems/ruby-\\d.\\d.\\d with gemset \\w+"
+  slackNotifier:
+    teamDomain: fidorsolutions
+    username: Jenkins
+jobs:
+  - script: >
+      pipelineJob('VL_Pipeline_Deploy_Environments') {
+          parameters {
+              booleanParam('NUKE_SWARM', false, 'Whether to NUKE the swarm cluster')
+              stringParam('FORK', 'vl', 'Fork which deploy')
+              stringParam('BRANCH_NAME', 'master', 'Branch which deploy')
+              stringParam('REPO_NAME', 'orca', 'Github orca repo name')
+              activeChoiceParam('ENV') {
+                  description('Which environment?')
+                  choiceType('SINGLE_SELECT')
+                  groovyScript {
+                      script('["uat_mig", "production"]')
+                  }
+              }
+              textParam('LIST_OF_CONTAINERS',
+                        'ADAPTER_DOCKER_TAG=master\n' +
+                        'API_GATEWAY_DOCKER_TAG=master\n' +
+                        'BACKOFFICE_DOCKER_TAG=develop\n' +
+                        'BANKING_DOCKER_TAG=develop\n' +
+                        'CARD_GATEWAY_DOCKER_TAG=master\n' +
+                        'CARD_MANAGEMENT_DOCKER_TAG=master\n' +
+                        'CASH_TRANSFER_DOCKER_TAG=master\n' +
+                        'CONFIRMABLE_ACTIONS_DOCKER_TAG=master\n' +
+                        'DATA_EXPORTER_DOCKER_TAG=master\n' +
+                        'EVENT_STORE_DOCKER_TAG=master\n' +
+                        'FRONTEND_DOCKER_TAG=master\n' +
+                        'ONBOARDING_DOCKER_TAG=master\n' +
+                        'TRANSFER_CART_DOCKER_TAG=master\n' +
+                        'TRANSACTION_QUERY_SERVICE_DOCKER_TAG=master\n' +
+                        'SCHEDULER_JOBS_BRANCH=master',
+                        'List of deployed services')
+          }
+          definition {
+              cpsScm {
+                  scriptPath 'jenkins/DeployEnvironments'
+                  scm {
+                    git {
+                        remote { url 'git@github.fidor.de:^${FORK}/orca.git' }
+                        branch '^${BRANCH_NAME}'
+                        extensions {}
+                    }
+                  }
+              }
+          }
+      }
+  - script: >
+      pipelineJob('VL_Pipeline_Deploy_Release') {
+          parameters {
+              activeChoiceParam('release_version') {
+                  description('Which release to deploy?')
+                  choiceType('SINGLE_SELECT')
+                  groovyScript {
+                      script('''\
+                             def SERVICE = "orca"
+                             def FORK = "vl"
+                             def token = "ff4c7ecbebd491182402b2d506609f479576e307"
+                             def repository = "$FORK/$SERVICE"
+                             def api_tags = "https://github.fidor.de/api/v3/repos/$repository/tags"
+                             def mask = "vl-"
+                             def version(addr, token, mask) {
+                                def conn = addr.toURL().openConnection()
+                                conn.setRequestProperty( "Authorization", "token $token" )
+                                def tags = []
+                                tags_list = new groovy.json.JsonSlurperClassic().parseText(conn.content.text)
+                                tags_masked = []
+                                tags_list.each{ if(it.name =~ mask) { tags_masked.add(it.name)} }
+                                tags_masked.removeAll{ it == "vl-0.291-patch0" }
+                                tags_masked.take(20)
+                             }
+                             version(api_tags, token, mask)''')
+                  }
+              }
+              activeChoiceParam('ENV') {
+                  description('Environment to deploy?')
+                  choiceType('SINGLE_SELECT')
+                  groovyScript {
+                      script('["uat_mig", "production"]')
+                  }
+              }
+              stringParam('FORK', 'vl', 'Fork which deploy')
+              stringParam('BRANCH', 'master', 'Branch which deploy')
+          }
+          definition {
+              cpsScm {
+                  scriptPath 'jenkins/DeployRelease'
+                  scm {
+                      git {
+                          remote { url 'git@github.fidor.de:^${FORK}/orca.git' }
+                          branch '^${BRANCH}'
+                          extensions {}
+                      }
+                  }
+              }
+          }
+      }
+  - script: >
+      pipelineJob('VL_Pipeline_Deploy_insights') {
+          parameters {
+             stringParam('FORK', 'vl', "Github fork of vl-provisioning repo")
+             stringParam('BRANCH', 'master', "Github branch of vl-provisioning repo")
+             stringParam('ORCA_FORK', 'vl', "Github fork of fos_insights repo")
+             stringParam('ORCA_BRANCH', 'master', "Github branch of fos_insights repo name")
+             choiceParam('ENV', ['production'], 'Which environment?')
+             stringParam('SSH_USER', ' ', "SSH user for ansible")
+             nonStoredPasswordParam('SSH_PASSWORD', "SSH password for ansible")
+             nonStoredPasswordParam('VAULT_PASSWORD', "Vault password for ansible")
+          }
+          definition {
+              cpsScm {
+                  scriptPath 'jenkins/DeployFosInsights'
+                  scm {
+                    git {
+                        remote { url 'git@github.fidor.de:^${ORCA_FORK}/orca.git' }
+                        branch '^${ORCA_BRANCH}'
+                        extensions {}
+                    }
+                  }
+              }
+          }
+      }

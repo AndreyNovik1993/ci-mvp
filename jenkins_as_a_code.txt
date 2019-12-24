@@ -1,0 +1,156 @@
+jenkins:
+  systemMessage: "Jenkins CI Environment"
+  slaveAgentPort: 50000
+  agentProtocols:
+    - "JNLP4-connect"
+  crumbIssuer:
+    standard:
+      excludeClientIPFromCrumb: true
+  disableRememberMe: true
+  scmCheckoutRetryCount: 0
+  authorizationStrategy:
+   globalMatrix:
+     permissions:
+      - "Overall/Administer:admin"
+credentials:
+    system:
+      domainCredentials:
+        - credentials:
+            - basicSSHUserPrivateKey:
+                scope: SYSTEM
+                id: agent_private_key
+                scope: SYSTEM
+                username: "jenkins"
+                passphrase:  ""
+                description: "ssh private key used to connect ssh for jenkins "
+                privateKeySource:
+                  directEntry:
+                    privateKey: |
+                      -----BEGIN RSA PRIVATE KEY-----
+                      MIIEpQIBAAKCAQEAncLvgHDUfzhlpwOgq4k3+i/TrPljvvCsvtmgfeOHPTUHj2jO
+                      f21FJwZmgFxQlZ6t1CatW8toOR+/SMO5UySv8Co/Q2yGgK10CflbywNweCizyoZ3
+                      uelvRrWL0fymHkxlditYPwEnRn8/XSCVrXYreO+fX/GJgEEcUfeERy6wHVoDtR2D
+                      E5aqnaEKt26knNUMNd1YhlykexbJfKglW8C4KuVDSF0MVPx5b2a2uXFa6q+F3hMd
+                      waDvYvgvwsXav3GukmYx1sjc4iL1E+01iennXoo0ALNcAEyWYhvNCWTeCK2w/AXO
+                      cRs1vlCtEObn540mKNJBVB/J6aCJcKA4Y7EmXQIDAQABAoIBAGPSgLEIs6x8BvYS
+                      uYtQm/bWZF3Cv3aF2wg3s/F0EpKMB2iarG68uVDkH9+AigziBqOChZbbserTR7nG
+                      /nC5egnA8Z68AK9TEWVuPsLKPlQJjRnM09zy89IN9Za9Am+Rb3HCI2haVnuo8HMA
+                      tzS23PL8zB9tOc/JYx4KO8y+ofkviWGm8LxfUKZU/FiAMSJ8pbvSYOdK8uNkQs6a
+                      fJmYDtNZqwocPXU09IqS6e0FCvcvZ+x4H1b8fREU51rksyDQT19sbTXYaIaqpQG5
+                      C5YeGmlTfHu8g2XS7K7Ki7dZoqxhPt9DK/C+erzlj58mqj1uGz2Buz5sKveFg3OP
+                      IxsxcJECgYEAzQS9b/5drfA9d1m0UxLgdQqoMxkI91MhVklTB6ISh52YF/IURH/G
+                      7bFMhZGsXcuthyjOudoLd2hsAE9nZGrWSqqiC0g6pECmi77eGwPK4z/n4w4uOXIj
+                      IUfywqxtg/lo9n9uxa1mIF2jObh7YhzmqjJxp7UxHts13aL3LKF1PMcCgYEAxP3c
+                      vQ3dEhOcZ3OUFR8YOOKbePr4l6h4YygWvqEU1sTooFZc4kuswabkwG3IWOG0CtVe
+                      ZNk2kf8HmhqrMqkJ0ctLqntCft2SKy0EjSH6RL8oBYmXF7mbzHVCoeWc735kC3RO
+                      EbRCQsTCaY/xLmZd7gzEwNViuF4/ouHeV+AJN7sCgYEAjVBoFyr4fW0roPmW/u/z
+                      ARnQaDAoavnE78nozkkbhpjM/ixhZfnBL5NXEHYhniFHQfOR0q8F2k+CqhARTzkI
+                      7jyBJ0+pBBB/+7EbPPm3Pj6NYociu3v91PHX1fGuJxqiC844l073JvYEDUQo367W
+                      G5hbmOKesgsdLOEoiH3d5n8CgYEAlSIXjezD855zJwKiFgdvYAl2aHWf47jAQ1kj
+                      Nvhd/WYfMtuPACcIR6cgwOmb5mYg1p7IEpM7M/Yd/DW6a+T7MR+2Tf94zPDTaupu
+                      6qXRgWAyXVbX0zdKUtRnOIfLcqh99wn63H5aN5AcGqzFizomXETAY7hoP2nixV43
+                      5NEQSWcCgYEAq7TAoYH9uBFTAlqLoRzdwWtG/p27qp2LhnIwseXzbwWJnEQO1BMq
+                      xch8uxocuHSJ35UoZEdn/9JMcls+dA3b3gtCA0j7VzvGN0oKll7Rmxlg/csLHo3r
+                      GCvRlV8rKxFbgqsOc2zKW7fYaXxJ99nMURVrbbYZjK0TWMc3tKRCuYA=
+                      -----END RSA PRIVATE KEY-----
+            - usernamePassword:
+                scope: GLOBAL
+                id: Artifactory
+                username: admin
+                password: password
+                description: "credentials to access to the artifactory"
+            - usernamePassword:
+                scope: GLOBAL
+                id: sonarqube
+                username: admin
+                password: admin
+                description: "user to connect to the sonarqube"
+unclassified:
+  gitSCM:
+    createAccountBasedOnEmail: false
+    showEntireCommitSummaryInChanges: false
+    useExistingAccountWithSameEmail: false
+  ivyBuildTrigger:
+    extendedVersionMatching: false
+  location:
+    adminAddress: "Andrey Novik <andrey_novik@epam.com>"
+    url: "http://jenkins:8080/"
+  mailer:
+    charset: "UTF-8"
+    useSsl: false
+  mavenModuleSet:
+    localRepository: "default"
+  pollSCM:
+    pollingThreadCount: 10
+  sonarglobalconfiguration:
+    buildWrapperEnabled: true
+    installations:
+      - name: sonarqube_scanner
+        serverUrl: https://sonarqube:9000
+        credentialsId: sonarqube
+        serverAuthenticationToken: "" 
+        additionalAnalysisProperties: ""
+        webhookSecretId: ""
+        additionalProperties: ""
+        mojoVersion: ""
+        triggers:
+          envVar: ""
+          skipScmCause: false
+          skipUpstreamCause: false
+  unclassified:
+  artifactorybuilder:
+    useCredentialsPlugin: true
+    artifactoryServers:
+      - serverId: artifactory
+        artifactoryUrl: http://artifactory:8081/artifactory
+        deployerCredentialsConfig:
+          credentialsId: "artifactory"
+        resolverCredentialsConfig:
+          username: admin
+          password: admin
+tool:
+  sonarRunnerInstallation:
+    installations:
+    - name: "sonarqube_scanner"
+      home: ""
+      properties:
+      - installSource:
+          installers:
+          - sonarRunnerInstaller:
+              id: "4.2.0.1873"
+jobs:
+  - script: >
+      folder('job_dsl') { 
+                  description('folder for pipeline job')
+               }
+      pipelineJob('job_dsl/pipeline') {
+            def repo = 'https://github.com/AndreyNovik1993/ci-mvp.git' 
+            description("Pipeline for $repo") 
+            definition { 
+                 cpsScm { 
+                     scm { 
+                       git { remote { url(repo) } 
+                         	branches('master') 
+                     	   	scriptPath('Jenkinsfile') 
+                          	extensions { } 
+                 }
+                } 
+             } 
+         } 
+       }
+  - script: > 
+      pipelineJob('job_dsl/curl') {
+            def repo = 'https://github.com/AndreyNovik1993/ci-mvp.git' 
+            description("Pipeline for $repo") 
+            definition { 
+                 cpsScm { 
+                     scm { 
+                       git { remote { url(repo) } 
+                         	branches('master') 
+                     	   	scriptPath('Jenkinsfile_curl') 
+                          	extensions { } 
+                 }
+               } 
+             } 
+          } 
+       }
