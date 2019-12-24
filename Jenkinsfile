@@ -59,7 +59,7 @@ pipeline {
                         "files": [
                             {
                                 "pattern": "*.o",
-                                "target": "build/GameMenu/"
+                                "target": "example-repo-local/Lib"
                             }
                         ]
                     }"""
