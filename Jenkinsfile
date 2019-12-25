@@ -16,7 +16,7 @@ pipeline {
             }
             steps { 
                     withSonarQubeEnv('sonarqube_scanner') {
-                             sh "${scannerHome}/bin/sonar-scanner -X  -Dsonar.host.url=http://sonarqube:9000  -Dsonar.language=c++ -Dsonar.projectName=test -Dsonar.lang.patterns.c++=**/*.cxx,**/*.cpp,**/*.cc,**/*.hxx,**/*.hpp,**/*.hh -Dsonar.projectVersion=1.1 -Dsonar.projectKey=My_project   -Dsonar.sources=src -Dsonar.tests=. -Dsonar.test.inclusions=**/*Test*/** -Dsonar.exclusions=**/*Test*/**"
+                             sh "${scannerHome}/bin/sonar-scanner -X  -Dsonar.host.url=http://sonarqube:9000  -Dsonar.language=c++ -Dsonar.projectName=test -Dsonar.lang.patterns.c++=**/*.cxx,**/*.cpp,**/*.cc,**/*.c,**/*.hxx,**/*.hpp,**/*.hh,**/*.h -Dsonar.projectVersion=1.1 -Dsonar.projectKey=My_project   -Dsonar.sources=src -Dsonar.tests=. -Dsonar.test.inclusions=**/*Test*/** -Dsonar.exclusions=**/*Test*/**"
                 }
             }
         }
