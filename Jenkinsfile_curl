@@ -1,7 +1,7 @@
 pipeline { 
     agent any   
     stages {
-                stage("SCM") {
+        stage("SCM") {
             steps { 
                   checkout scm: [$class: 'GitSCM',
                        branches: [[name: 'master']],
@@ -10,7 +10,7 @@ pipeline {
                       ]
             }//steps
         }//stage
-         stage("SonarQube analysis") {
+        stage("SonarQube analysis") {
             environment {
             scannerHome = tool 'sonarqube_scanner'
             }
@@ -22,7 +22,7 @@ pipeline {
         }
         stage('Sonarqube Quality Gates.') {
             options {
-                timeout(time: 5, unit: 'MINUTES') 
+                timeout(time: 1, unit: 'HOURS') 
             }
             steps{ 
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -61,7 +61,7 @@ pipeline {
                         "files": [
                             {
                                 "pattern": "*.zip",
-                                "target": "example-repo-local/"
+                                "target": "example-repo-local/curl"
                             }
                         ]
                     }"""

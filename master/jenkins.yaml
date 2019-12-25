@@ -99,15 +99,13 @@ unclassified:
           skipUpstreamCause: false
   unclassified:
   artifactorybuilder:
-    useCredentialsPlugin: true
+    useCredentialsPlugin: false
     artifactoryServers:
       - serverId: artifactory
         artifactoryUrl: http://artifactory:8081/artifactory
         deployerCredentialsConfig:
-          credentialsId: "artifactory"
-        resolverCredentialsConfig:
           username: admin
-          password: admin
+          password: password
 tool:
   sonarRunnerInstallation:
     installations:
