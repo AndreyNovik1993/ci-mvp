@@ -22,7 +22,7 @@ pipeline {
         }
         stage('Sonarqube Quality Gates.') {
             options {
-                timeout(time: 1, unit: 'HOURS') 
+                timeout(time: 5, unit: 'MINUTES') 
             }
             steps{
                 sh 'curl "http://admin:admin@sonarqube:9000/api/webhooks/create" -X POST -d "name=jenkins_curl&url=http://jenkins:8080/sonarqube-webhook/"' 
