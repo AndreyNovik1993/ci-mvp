@@ -22,7 +22,7 @@ pipeline {
         }
         stage('Sonarqube Quality Gates.') {
             options {
-                timeout(time: 1, unit: 'HOURS') 
+                timeout(time: 5, unit: 'MINUTES') 
             }
             steps{ 
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
