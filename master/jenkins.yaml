@@ -106,6 +106,15 @@ unclassified:
         deployerCredentialsConfig:
           username: admin
           password: password
+security:
+  apiToken:
+    creationOfLegacyTokenEnabled: false
+    tokenGenerationOnCreationEnabled: false
+    usageStatisticsEnabled: true
+  globalJobDslSecurityConfiguration:
+    useScriptSecurity: true
+  sSHD:
+    port: -1
 tool:
   sonarRunnerInstallation:
     installations:

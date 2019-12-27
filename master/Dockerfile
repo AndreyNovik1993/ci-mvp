@@ -14,7 +14,9 @@ ENV JENKINS_PASS admin
  
 # Skip the initial setup wizard
 ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false 
-ENV JAVA_OPTS -Djava.awt.headless=tru
+ENV JAVA_OPTS -Dhudson.security.csrf.GlobalCrumbIssuerConfiguration=false 
+ENV JAVA_OPTS -Djava.awt.headless=true 
+ENV JAVA_OPTS -Djava.net.preferIPv4Stack=true
  
 # Start-up scripts to set number of executors and creating the admin user
 #COPY executors.groovy /usr/share/jenkins/ref/init.groovy.d/
