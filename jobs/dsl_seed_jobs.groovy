@@ -3,7 +3,7 @@ folder('job_dsl_seed') {
    description('folder for pipeline job')
 
 }
-pipelineJob('job_dsl_seed/pipeline') {
+pipelineJob('job_dsl_seed/curl_pipeline') {
       def repo = 'https://github.com/AndreyNovik1993/ci-mvp.git' 
       description("Pipeline for $repo") 
       definition { 
@@ -17,5 +17,5 @@ pipelineJob('job_dsl_seed/pipeline') {
 	  } 
       } 
    } 
-queue('job_dsl_seed/pipeline')
+queue('job_dsl_seed/curl_pipeline')
 }
