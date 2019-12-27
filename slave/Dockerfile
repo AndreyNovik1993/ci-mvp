@@ -13,7 +13,10 @@ RUN apt-get update -y && apt-get install -y \
                                         libtool \
                                         stunnel4 \
                                         nghttp2 \
-                                        zip
+                                        zip \
+                                        ccache
+#RUN ln -s ccache /usr/bin/x86_64-linux-gnu-g++-6  && ln -s ccache /usr/bin/x86_64-linux-gnu-gcc-6 
+#&& ln -sv /usr/bin/cc ccache && ln -sv /usr/bin/c++ ccache
 
 
 

@@ -2,19 +2,17 @@
 <actions/>
 <description/>
 <keepDependencies>false</keepDependencies>
-<properties>
-<hudson.plugins.jira.JiraProjectProperty plugin="jira@3.0.7"/>
-</properties>
-<scm class="hudson.plugins.git.GitSCM" plugin="git@3.10.0">
+<properties/>
+<scm class="hudson.plugins.git.GitSCM" plugin="git@4.0.0">
 <configVersion>2</configVersion>
 <userRemoteConfigs>
 <hudson.plugins.git.UserRemoteConfig>
-<url>http://github.com/AndreyNovik1993/ci-mvp.git</url>
+<url>https://github.com/AndreyNovik1993/ci-mvp.git</url>
 </hudson.plugins.git.UserRemoteConfig>
 </userRemoteConfigs>
 <branches>
 <hudson.plugins.git.BranchSpec>
-<name>master</name>
+<name>*/master</name>
 </hudson.plugins.git.BranchSpec>
 </branches>
 <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
@@ -28,7 +26,7 @@
 <triggers/>
 <concurrentBuild>false</concurrentBuild>
 <builders>
-<javaposse.jobdsl.plugin.ExecuteDslScripts plugin="job-dsl@1.74">
+<javaposse.jobdsl.plugin.ExecuteDslScripts plugin="job-dsl@1.76">
 <targets>jobs/*.groovy</targets>
 <usingScriptText>false</usingScriptText>
 <sandbox>false</sandbox>
@@ -46,4 +44,3 @@
 <publishers/>
 <buildWrappers/>
 </project>
-
