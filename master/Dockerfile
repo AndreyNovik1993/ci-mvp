@@ -1,6 +1,5 @@
 #Starting off with the Jenkins base Image
-#FROM  jenkins/jenkins:2.187
-FROM jenkins/jenkins
+FROM jenkins/jenkins:2.213-centos
 
 # Installing the plugins we need using the in-built install-plugins.sh script
 RUN /usr/local/bin/install-plugins.sh git  job-dsl sonar-quality-gates configuration-as-code  docker-plugin configuration-as-code-support \

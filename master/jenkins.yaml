@@ -127,10 +127,10 @@ tool:
               id: "4.2.0.1873"
 jobs:
   - script: >
-      folder('job_dsl') { 
+      folder('autoconfigured_jobs') { 
                   description('folder for pipeline job')
                }
-      pipelineJob('job_dsl/pipeline') {
+      pipelineJob('autoconfigured_jobs/simple_project') {
             def repo = 'https://github.com/AndreyNovik1993/ci-mvp.git' 
             description("Pipeline for $repo") 
             definition { 
@@ -146,7 +146,7 @@ jobs:
          } 
        }
   - script: > 
-      pipelineJob('job_dsl/curl') {
+      pipelineJob('autoconfigured_jobs/curl_project') {
             def repo = 'https://github.com/AndreyNovik1993/ci-mvp.git' 
             description("Pipeline for $repo") 
             definition { 

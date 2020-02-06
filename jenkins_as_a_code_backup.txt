@@ -4,7 +4,7 @@ jenkins:
     port: "3128"
     noProxyHost: "github.fidor.de, .fidor.intern"
     testUrl: "http://google.com"
-  systemMessage: "VanLanshot Jenkins PROD Environment"
+  systemMessage: "
   slaveAgentPort: 50000
   agentProtocols:
     - "JNLP4-connect"
