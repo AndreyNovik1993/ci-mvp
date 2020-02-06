@@ -81,7 +81,7 @@ All documentation for your project has to be put into README.md file and written
 3. Create folder for an artifactory /opt/artifactory/ with perrmission 777. 
 4. Run command "docker-compose -f docker-compose.yml up -d --build"  in the directory where a project was cloned 
 5. After will be complited docker-compose command wait several minutes until all docker enviroment start 
-6. If you have to auto create seed_job will run script ./add_job.sh.
+6. If you have to auto create seed_job will run script ./add_job.sh and approve a script on the jenkins configure (it has to do manually)
 7. if you have to run jobs are configured in the jenkins automaticly, will connect to jenkins http://localost:8080 and run these jobs manually.  
 
 P.S If you have problems with running pipeline on the stage (SonarQube), please will wait more time and restart script ./add_job.sh again. 
