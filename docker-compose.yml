@@ -1,0 +1,62 @@
+version: "3.7"
+services:
+     jenkins:
+        build: master
+        restart: unless-stopped
+        volumes:
+          - jenkins_data:/var/jenkins_home
+        ports:
+         - '8080:8080'
+         - '50000:50000'
+
+     agent_swarm: 
+        build: slave
+        entrypoint: java -jar /opt/swarm-client.jar -name agentswarm -username admin -password admin -executors 2
+        restart: always
+        depends_on:
+           - jenkins
+      
+
+     sonarqube:
+        image: sonarqube
+        volumes:
+          - sonarqube_conf:/opt/sonarqube/conf 
+          - sonarqube_extensions:/opt/sonarqube/extensions 
+          - sonarqube_logs:/opt/sonarqube/logs 
+          - sonarqube_data:/opt/sonarqube/data 
+          - ./sonarqube/plugins:/opt/sonarqube/extensions/plugins
+        ports:
+           - '9000:9000'
+        restart: always
+        ulimits:
+          nofile:
+            soft: "262144"
+            hard: "262144"
+        depends_on:
+            - jenkins 
+  
+     artifactory:
+        image: docker.bintray.io/jfrog/artifactory-oss:latest
+        ports:
+           - '8081:8081'
+        depends_on:
+            - jenkins
+        volumes:
+          - /opt/artifactory/:/var/opt/jfrog/artifactory
+#    Create a folder artifactory with user "artifacroty" and uid 1030
+#    Add extra Java options by uncommenting the following lines
+        environment:
+         - EXTRA_JAVA_OPTIONS=-Xmx3g
+        restart: always
+        ulimits:
+          nproc: 65535
+          nofile:
+              soft: 32000
+              hard: 64440
+
+volumes: 
+     jenkins_data:
+     sonarqube_conf:
+     sonarqube_extensions:
+     sonarqube_logs:
+     sonarqube_data:
