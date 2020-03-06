@@ -3,11 +3,6 @@ Case Introduction
 You have been assigned on a project as a build engineer. Project is a solution for embedded systems. Your team members are strong C++ developers who are focused on development of the solution. At the moment they are having difficulties with integration of developed modules. Team has to waste a lot of time on manual activities like checking code style, building, testing and so on.
 Team decided to try the Continuous Integration (**CI**) approach and to automate some everyday activities. Your team isn't familiar with CI and they have asked you to prepare proposal which should include documentation and minimum viable product (**MVP**).
 
-Work Description
-- 
-- Create you own repository in Github. You can take [this repository](https://git.epam.com/pavel_shchetska/ci-mvp) as example if it is usefull for you; 
-- Put your documentation into README.md file. It should be in *markdown* format;
-- Once you're ready, send letter to pavel_shchetska@epam.com with link to you own repository. 
 
 ## Tasks
 ##### 1. You have to prepare development environment which will be based on docker technology and include the next instances:
